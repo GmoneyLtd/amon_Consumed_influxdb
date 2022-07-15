@@ -1,3 +1,7 @@
-pip==22.1.2
+certifi==2022.6.15
+influxdb-client==1.30.0
+python-dateutil==2.8.2
 pyzmq==23.2.0
-setuptools==63.1.0
+Rx==3.2.0
+six==1.16.0
+urllib3==1.26.10
