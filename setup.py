@@ -9,6 +9,8 @@
 import asyncio
 import configparser
 
+from sample.zmq_consumer import write_influxdb
+
 # get influxdb config options
 config = configparser.ConfigParser()
 config.read("../influxdb.ini", encoding="utf-8")
@@ -18,4 +20,4 @@ org = config['influxdb']['org']
 bucket = config['influxdb']['bucket']
 
 if __name__ == '__main__':
-    asyncio.run()
+    asyncio.run(write_influxdb(url, token, org, bucket))

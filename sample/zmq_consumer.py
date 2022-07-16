@@ -17,7 +17,7 @@ logger.add("../log/zmqconsumer_{time}.log", rotation="00:00", enqueue=True, enco
 
 
 # subscribers msg ,topic = b'' or topic = ''.encode('utf-8')
-async def writeInfluxdb(url, token, org, bucket, host='127.0.0.1', port='5555', topic=b''):
+async def write_influxdb(url, token, org, bucket, host='127.0.0.1', port='5555', topic=b''):
     context = zmq.asyncio.Context()
     socket = context.socket(zmq.SUB)
     try:
@@ -26,8 +26,11 @@ async def writeInfluxdb(url, token, org, bucket, host='127.0.0.1', port='5555', 
     except Exception as e:
         logger.error(e)
 
-    async with InfluxDBClientAsync(url, token, org) as client:
-        write_api = client.write_api()
+    try:
+        with InfluxDBClientAsync(url, token, org) as client:
+            write_api = client.write_api()
+    except Exception as e:
+        logger.error(e)
 
     while True:
         try:
