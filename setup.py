@@ -13,7 +13,7 @@ from sample.zmq_consumer import write_influxdb
 
 # get influxdb config options
 config = configparser.ConfigParser()
-config.read("../influxdb.ini", encoding="utf-8")
+config.read("influxdb.ini", encoding="utf-8")
 url = config['influxdb']['url']
 token = config['influxdb']['token']
 org = config['influxdb']['org']

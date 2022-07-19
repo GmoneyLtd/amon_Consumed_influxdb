@@ -36,7 +36,8 @@ async def write_influxdb(url, token, org, bucket, host='127.0.0.1', port='5555',
         try:
             response = await socket.recv()
             response = json.loads(response.decode('utf-8'))
+            // TODO 基于response的数据变换为influxdb的数据格式 point
             await write_api.write(bucket=bucket, record=response)
         except Exception as e:
             logger.error(e)
-            break
+            continue
