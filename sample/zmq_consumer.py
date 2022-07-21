@@ -5,15 +5,14 @@
 # @File    : zmq_consumer.py
 # @Project : apuer
 
-import json
-
 import zmq
 import zmq.asyncio
 from influxdb_client.client.influxdb_client_async import InfluxDBClientAsync
-from loguru import logger
+
+from sample.msg2point import *
 
 # 日志, 每天创建一个新的log文件
-logger.add("../log/zmqconsumer_{time}.log", rotation="00:00", enqueue=True, encoding="utf-8")
+logger.add("../log/zmq_consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8")
 
 
 # subscribers msg ,topic = b'' or topic = ''.encode('utf-8')
@@ -32,12 +31,18 @@ async def write_influxdb(url, token, org, bucket, host='127.0.0.1', port='5555',
     except Exception as e:
         logger.error(e)
 
+    # _point1 = Point("my_measurement").tag("location", "Prague").field("temperature", 25.3)
+    # _point2 = Point("my_measurement").tag("location", "New York").field("temperature", 24.3)
+    # response = [_point1,_point2]
     while True:
         try:
-            response = await socket.recv()
-            response = json.loads(response.decode('utf-8'))
-            // TODO 基于response的数据变换为influxdb的数据格式 point
-            await write_api.write(bucket=bucket, record=response)
+            # socket.recv_string(), 默认utf-8解码，也可以socket.recv(), 然后在通过decode('utf-8')解码
+            response = await socket.recv_string()
+            # 基于response的数据变换为influxdb的数据格式Point
+            points = amon2point(response)
+            if points:
+                await write_api.write(bucket=bucket, record=points)
+
         except Exception as e:
             logger.error(e)
             continue
