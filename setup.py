@@ -23,8 +23,6 @@ bucket = config['influxdb']['bucket']
 host = config['zmq']['host']
 port = config['zmq']['port']
 topic = config['zmq']['topic'].encode('utf8')
-print(topic)
-print(type(topic))
 
 if __name__ == '__main__':
-    asyncio.run(write_influxdb(url, token, org, bucket, host, port, topic))
+    asyncio.run(write_influxdb(url, token, org, bucket, host, port))

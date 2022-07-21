@@ -298,5 +298,5 @@ def amon2point(amon: str) -> Union[List, None]:
         return points
     else:
         logger.warning(
-            f"msg_type: {msg_dict.get('type')} - msg_seq: {msg_dict.get('sequence')} - date_row: {msg_dict.get('rows')} --> no consumed")
+            f"msg_type: {amon_dict.get('type')} - msg_seq: {amon_dict.get('sequence')} - date_row: {amon_dict.get('rows')} --> no consumed")
         return None

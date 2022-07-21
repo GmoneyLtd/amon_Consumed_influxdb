@@ -26,7 +26,7 @@ async def write_influxdb(url, token, org, bucket, host='127.0.0.1', port='5555',
         logger.error(e)
 
     try:
-        with InfluxDBClientAsync(url, token, org) as client:
+        async with InfluxDBClientAsync(url, token, org) as client:
             write_api = client.write_api()
     except Exception as e:
         logger.error(e)
