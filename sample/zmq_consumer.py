@@ -47,7 +47,7 @@ async def write_influxdb(url, token, org, bucket, host='127.0.0.1', port='5555',
                     async with InfluxDBClientAsync(url, token, org) as client:
                         write_api = client.write_api()
                         write_result = await write_api.write(bucket=bucket, record=points)
-                        logger.info(f'amon msg {write_result} writing into influxDB --- consumed')
+                        logger.info(f'amon msg {write_result} writing into influxDB ---> consumed')
                 except Exception as e:
                     logger.error(e)
         except Exception as e:
