@@ -5,7 +5,8 @@ from typing import *
 from influxdb_client import Point, WritePrecision
 from loguru import logger
 
-logger.add("../log/msg2point_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8")
+# 注释该行，set.py 添加该代码，其他地方定义无意义
+# logger.add("../log/msg2point_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8")
 
 eth_operstate = {
     "1": "up",
@@ -240,27 +241,26 @@ def amon_ap_eth_stats_msg(amon: dict):
     vals = []
     try:
         for temp_val in amon.get('data'):
-            val = Point('AP_ETH_STATS_MESSAGE'
-                        ).tag('AP_MAC', temp_val.get('CL_AP_ETH_STATS_AP_MAC')
-                              ).tag('MD_IP', amon.get('source')
-                                    ).field('AP_ETH_STATS_OPERSTATE',
-                                            eth_operstate.get(str(temp_val.get('CL_AP_ETH_STATS_OPERSTATE')))
-                                            ).field('AP_ETH_STATS_SPEED',
-                                                    eth_speed.get(str(temp_val.get('CL_AP_ETH_STATS_SPEED')))
-                                                    ).field('AP_ETH_STATS_TX_BYTES',
-                                                            temp_val.get('CL_AP_ETH_STATS_TX_BYTES')
-                                                            ).field('AP_ETH_STATS_RX_BYTES',
-                                                                    temp_val.get('CL_AP_ETH_STATS_RX_BYTES')
-                                                                    ).field('sequence', amon.get('sequence')
-                                                                            ).time(
-                datetime.utcfromtimestamp(amon.get('timestamp')), WritePrecision.S)
+            val = Point(
+                'AP_ETH_STATS_MESSAGE'
+            ).tag(
+                'AP_MAC', temp_val.get('CL_AP_ETH_STATS_AP_MAC')
+            ).tag(
+                'MD_IP', amon.get('source')
+            ).field(
+                'AP_ETH_STATS_OPERSTATE', eth_operstate.get(str(temp_val.get('CL_AP_ETH_STATS_OPERSTATE')))
+            ).field('AP_ETH_STATS_SPEED', eth_speed.get(str(temp_val.get('CL_AP_ETH_STATS_SPEED')))
+                    ).field('AP_ETH_STATS_TX_BYTES', temp_val.get('CL_AP_ETH_STATS_TX_BYTES')
+                            ).field('AP_ETH_STATS_RX_BYTES', temp_val.get('CL_AP_ETH_STATS_RX_BYTES')
+                                    ).field('sequence', amon.get('sequence')
+                                            ).time(datetime.utcfromtimestamp(amon.get('timestamp')), WritePrecision.S)
             vals.append(val)
         return vals
     except Exception as e:
         pass
 
 
-# define a dict for  amon msg type <-> consumer functions
+# define a dict for  amon msg  <-> consumer functions
 msg_consumer = {
     '108': amon_ap_eth_stats_msg,
 }
@@ -294,9 +294,9 @@ def amon2point(amon: str) -> Union[List, None]:
 
         points = fun(msg_dict)
         logger.info(
-            f"msg_type: {msg_dict.get('type')} - msg_seq: {msg_dict.get('sequence')} - date_row: {msg_dict.get('rows')} --> received and consumed")
+            f"msg_type: {msg_dict.get('type')} - msg_seq: {msg_dict.get('sequence')} - date_row: {msg_dict.get('rows')} --> received and consuming")
         return points
     else:
         logger.warning(
-            f"msg_type: {amon_dict.get('type')} - msg_seq: {amon_dict.get('sequence')} - date_row: {amon_dict.get('rows')} --> no consumed")
+            f"msg_type: {amon_dict.get('type')} - msg_seq: {amon_dict.get('sequence')} - date_row: {amon_dict.get('rows')} --> received and no consumed")
         return None

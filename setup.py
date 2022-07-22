@@ -14,7 +14,7 @@ from loguru import logger
 from sample.zmq_consumer import write_influxdb
 
 # 日志, 每天创建一个新的log文件
-logger.add("../log/Zeromq_consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8")
+logger.add("./log/ZeroMQ_Consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8")
 
 # get influxdb config options
 config = configparser.ConfigParser()

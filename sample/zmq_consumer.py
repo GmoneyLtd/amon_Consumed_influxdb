@@ -11,8 +11,10 @@ from influxdb_client.client.influxdb_client_async import InfluxDBClientAsync
 
 from sample.msg2point import *
 
+
 # 日志, 每天创建一个新的log文件
-logger.add("../log/zmq_consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8")
+# 注释该行，set.py 添加该代码，其他地方定义无意义
+# logger.add("../log/zmq_consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8")
 
 
 # subscribers msg ,topic = b'' or topic = ''.encode('utf-8')
@@ -41,8 +43,13 @@ async def write_influxdb(url, token, org, bucket, host='127.0.0.1', port='5555',
             # 基于response的数据变换为influxdb的数据格式Point
             points = amon2point(response)
             if points:
-                await write_api.write(bucket=bucket, record=points)
-
+                try:
+                    async with InfluxDBClientAsync(url, token, org) as client:
+                        write_api = client.write_api()
+                        write_result = await write_api.write(bucket=bucket, record=points)
+                        logger.info(f'amon msg {write_result} writing into influxDB --- consumed')
+                except Exception as e:
+                    logger.error(e)
         except Exception as e:
             logger.error(e)
             continue
