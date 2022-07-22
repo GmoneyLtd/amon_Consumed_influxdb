@@ -10,8 +10,8 @@ idna==3.3
 influxdb-client==1.30.0
 loguru==0.6.0
 multidict==6.0.2
-pip==22.0.4
-# PySnooper==1.1.1
+pip==22.2
+PySnooper==1.1.1
 python-dateutil==2.8.2
 pyzmq==23.2.0
 Rx==3.2.0
