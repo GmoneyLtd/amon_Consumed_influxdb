@@ -13,8 +13,15 @@ from loguru import logger
 
 from sample.zmq_consumer import write_influxdb
 
-# 日志, 每天创建一个新的log文件
-logger.add("./log/ZeroMQ_Consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8")
+# 日志, 每天创建一个新的log文件, 分日志级别记录日志
+logger.add("./log/ZeroMQ_WARNING_Consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8",
+           level="WARNING", retention='7 days')
+
+logger.add("./log/ZeroMQ_ERROR_Consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8",
+           level="ERROR", retention='30 days')
+
+logger.add("./log/ZeroMQ_INFO_Consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8",
+           level="INFO", retention='7 days')
 
 # get influxdb config options
 config = configparser.ConfigParser()

@@ -257,7 +257,7 @@ def amon_ap_eth_stats_msg(amon: dict):
             vals.append(val)
         return vals
     except Exception as e:
-        pass
+        logger.error(e)
 
 
 # define a dict for  amon msg  <-> consumer functions
@@ -293,10 +293,10 @@ def amon2point(amon: str) -> Union[List, None]:
             row_num += 1
 
         points = fun(msg_dict)
-        logger.info(
+        logger.opt(lazy=True).info(
             f"msg_type: {msg_dict.get('type')} - msg_seq: {msg_dict.get('sequence')} - date_row: {msg_dict.get('rows')} ---> received and consuming")
         return points
     else:
-        logger.warning(
+        logger.opt(lazy=True).warning(
             f"msg_type: {amon_dict.get('type')} - msg_seq: {amon_dict.get('sequence')} - date_row: {amon_dict.get('rows')} ---> received and no consumed")
         return None
