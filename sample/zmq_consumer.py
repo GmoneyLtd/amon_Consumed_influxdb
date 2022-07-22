@@ -50,6 +50,7 @@ async def write_influxdb(url, token, org, bucket, host='127.0.0.1', port='5555',
                         logger.info(f'amon msg {write_result} writing into influxDB ---> consumed')
                 except Exception as e:
                     logger.error(e)
+                    continue
         except Exception as e:
             logger.error(e)
             continue
