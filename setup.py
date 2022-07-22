@@ -4,24 +4,13 @@
 # @Author  : nice
 # @File    : setup.py
 # @Project : zmq-consumer
-
-
 import asyncio
 import configparser
+import sys
 
 from loguru import logger
 
 from sample.zmq_consumer import write_influxdb
-
-# 日志, 每天创建一个新的log文件, 分日志级别记录日志
-logger.add("./log/ZeroMQ_WARNING_Consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8",
-           level="WARNING", retention='7 days')
-
-logger.add("./log/ZeroMQ_ERROR_Consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8",
-           level="ERROR", retention='30 days')
-
-logger.add("./log/ZeroMQ_INFO_Consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8",
-           level="INFO", retention='7 days')
 
 # get influxdb config options
 config = configparser.ConfigParser()
@@ -35,6 +24,16 @@ bucket = config['influxdb']['bucket']
 host = config['zmq']['host']
 port = config['zmq']['port']
 topic = config['zmq']['topic'].encode('utf8')
+
+# get log file level
+level = config['log_level']['level']
+
+# 定义console输出日志级别
+logger.remove()
+logger.add(sys.stdout, level="ERROR")
+# 日志, 每天创建一个新的log文件
+logger.add("./log/amon_Consumer_{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8",
+           level=level, retention='30 days')
 
 if __name__ == '__main__':
     asyncio.run(write_influxdb(url, token, org, bucket, host, port))
