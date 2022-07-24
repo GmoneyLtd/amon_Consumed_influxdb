@@ -30,7 +30,7 @@ level = config['log_level']['level']
 
 # 定义console输出日志级别
 logger.remove()
-logger.add(sys.stdout, level="ERROR")
+logger.add(sys.stdout, level=level)
 # 日志, 每天创建一个新的log文件
 logger.add("./log/amon_Consumer_influxdb-{time:%Y-%m-%d}.log", rotation="00:00", enqueue=True, encoding="utf-8",
            level=level, retention='30 days')
