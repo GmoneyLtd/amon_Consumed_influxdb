@@ -31,7 +31,7 @@ from sample.zmq_consumer import write_influxdb
 
 # get influxdb config options
 url = os.environ['url']
-token = os.environ['org']
+token = os.environ['token']
 org = os.environ['org']
 bucket = os.environ['bucket']
 # get zmq config options
